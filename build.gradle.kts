@@ -40,7 +40,7 @@ subprojects {
             create<MavenPublication>("gpr") {
                 group = "net.ascheja.xmlrpc"
                 artifactId = subProject.name
-                version = subProject.version.toString()
+                version = rootProject.version.toString()
                 from(components["java"])
             }
         }
