@@ -16,6 +16,7 @@ allprojects {
 }
 
 subprojects {
+    val subProject = this
     apply(plugin = "maven-publish")
     apply(plugin = "org.jlleitschuh.gradle.ktlint")
     tasks.test {
@@ -38,6 +39,8 @@ subprojects {
         publications {
             create<MavenPublication>("gpr") {
                 group = "net.ascheja.xmlrpc"
+                artifactId = subProject.name
+                version = subProject.version.toString()
                 from(components["java"])
             }
         }
