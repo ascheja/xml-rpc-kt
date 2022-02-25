@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<methodResponse>
+    <params>
+        <param>
+            <value>
+                <string>South Dakota</string>
+            </value>
+        </param>
+        <param>
+            <value>
+                <string>North Dakota</string>
+            </value>
+        </param>
+    </params>
+</methodResponse>
