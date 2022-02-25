@@ -19,6 +19,6 @@ jobs:
       - name: Publish package
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
-          arguments: publish
+          arguments: -Pversion=${{ env.GITHUB_REF_NAME }} publish
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
