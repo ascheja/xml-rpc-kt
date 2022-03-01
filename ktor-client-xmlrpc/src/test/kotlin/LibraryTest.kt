@@ -2,7 +2,7 @@
  * Copyright (c) 2022 Andreas Scheja. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package net.ascheja.xmlrpc.ktor.client
+package org.ascheja.xmlrpc.ktor.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
@@ -13,12 +13,12 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.headersOf
 import kotlinx.coroutines.runBlocking
-import net.ascheja.xmlrpc.protocol.IntegerValue
-import net.ascheja.xmlrpc.protocol.MethodCall
-import net.ascheja.xmlrpc.protocol.MethodResponse
-import net.ascheja.xmlrpc.protocol.MethodResponseFault
-import net.ascheja.xmlrpc.protocol.MethodResponseSuccess
-import net.ascheja.xmlrpc.protocol.writeToByteArray
+import org.ascheja.xmlrpc.protocol.IntegerValue
+import org.ascheja.xmlrpc.protocol.MethodCall
+import org.ascheja.xmlrpc.protocol.MethodResponse
+import org.ascheja.xmlrpc.protocol.MethodResponseFault
+import org.ascheja.xmlrpc.protocol.MethodResponseSuccess
+import org.ascheja.xmlrpc.protocol.writeToByteArray
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 import java.io.ByteArrayInputStream

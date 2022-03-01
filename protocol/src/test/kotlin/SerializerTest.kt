@@ -1,4 +1,4 @@
-package net.ascheja.xmlrpc.protocol
+package org.ascheja.xmlrpc.protocol
 
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

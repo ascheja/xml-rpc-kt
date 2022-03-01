@@ -2,7 +2,7 @@
  * Copyright (c) 2022 Andreas Scheja. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package net.ascheja.xmlrpc.ktor.client
+package org.ascheja.xmlrpc.ktor.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
@@ -14,10 +14,10 @@ import io.ktor.http.contentType
 import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import net.ascheja.xmlrpc.protocol.MethodCall
-import net.ascheja.xmlrpc.protocol.MethodResponse
-import net.ascheja.xmlrpc.protocol.MethodResponseFault
-import net.ascheja.xmlrpc.protocol.writeToByteArray
+import org.ascheja.xmlrpc.protocol.MethodCall
+import org.ascheja.xmlrpc.protocol.MethodResponse
+import org.ascheja.xmlrpc.protocol.MethodResponseFault
+import org.ascheja.xmlrpc.protocol.writeToByteArray
 
 public class XmlRpcFault(public val methodResponse: MethodResponseFault) : RuntimeException()
 
