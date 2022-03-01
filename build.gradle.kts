@@ -6,6 +6,8 @@ plugins {
     signing
 }
 
+group = "org.ascheja.xmlrpc"
+
 allprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
     repositories {
@@ -32,23 +34,23 @@ subprojects {
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
-                group = "org.ascheja.xmlrpc"
                 artifactId = subProject.name
                 version = System.getenv("GITHUB_REF_NAME")
                 pom {
-                    name.set(subProject.name)
-                    description.set("")
+                    name.set("${project.group}.${subProject.name}")
+                    description.set("xml-rpc implementation written in Kotlin")
                     url.set("https://github.com/ascheja/xml-rpc-kt")
                     inceptionYear.set("2022")
                     scm {
                         url.set("https://github.com/ascheja/xml-rpc-kt")
                         connection.set("scm:git:https://github.com/ascheja/xml-rpc-kt.git")
-                        developerConnection.set("scm:git@github.com:ascheja/xml-rpc-kt.git")
+                        developerConnection.set("scm:git:ssh://github.com:ascheja/xml-rpc-kt.git")
                     }
                     developers {
                         developer {
                             id.set("ascheja")
                             name.set("Andreas Scheja")
+                            email.set("a.scheja@gmail.com")
                         }
                     }
                     licenses {
@@ -63,7 +65,7 @@ subprojects {
         }
     }
     signing {
-        useInMemoryPgpKeys(System.getenv("SIGNING_KEY"), System.getenv("SIGNING_PASSWORD"))
+        useGpgCmd()
         sign(publishing.publications["mavenJava"])
     }
 }
