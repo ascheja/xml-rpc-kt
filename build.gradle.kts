@@ -35,7 +35,9 @@ subprojects {
     publishing {
         publications {
             create<MavenPublication>("mavenJava") {
+                groupId = rootProject.group as String
                 artifactId = subProject.name
+                version = rootProject.version as String
                 pom {
                     name.set("${project.group}:${subProject.name}")
                     description.set("xml-rpc implementation written in Kotlin")
