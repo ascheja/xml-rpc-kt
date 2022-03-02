@@ -19,7 +19,7 @@ jobs:
       - name: Publish package
         uses: gradle/gradle-build-action@937999e9cc2425eddc7fd62d1053baf041147db7
         with:
-          arguments: publish
+          arguments: publishToOssrh closeAndReleaseOssrhStagingRepository
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
