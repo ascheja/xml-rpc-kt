@@ -31,8 +31,8 @@ internal fun createDefaultTransformer(prettyPrint: Boolean): Transformer {
 
 public fun Document.writeToByteArray(prettyPrint: Boolean = true): ByteArray {
     return ByteArrayOutputStream().use { out ->
-        out.writeBytes(declarationBytes)
-        if (prettyPrint) out.writeBytes(System.lineSeparator().toByteArray())
+        out.write(declarationBytes)
+        if (prettyPrint) out.write(System.lineSeparator().toByteArray())
         createDefaultTransformer(prettyPrint).transform(DOMSource(this), StreamResult(out))
         out.toByteArray()
     }
