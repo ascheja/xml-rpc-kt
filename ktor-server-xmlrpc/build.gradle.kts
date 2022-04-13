@@ -1,4 +1,4 @@
-val ktorVersion = "1.6.7"
+val ktorVersion = "2.0.0"
 
 dependencies {
     api(project(":protocol"))

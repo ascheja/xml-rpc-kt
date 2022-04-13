@@ -7,10 +7,11 @@ package org.ascheja.xmlrpc.ktor.client
 import io.ktor.client.HttpClient
 import io.ktor.client.request.header
 import io.ktor.client.request.post
-import io.ktor.client.statement.HttpResponse
+import io.ktor.client.request.setBody
+import io.ktor.client.statement.bodyAsChannel
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.contentType
+import io.ktor.http.content.ByteArrayContent
 import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -22,13 +23,14 @@ import org.ascheja.xmlrpc.protocol.writeToByteArray
 public class XmlRpcFault(public val methodResponse: MethodResponseFault) : RuntimeException()
 
 public suspend fun HttpClient.xmlRpc(urlString: String, methodCall: MethodCall, throwOnFault: Boolean = true): MethodResponse {
-    val response = post<HttpResponse>(urlString) {
+    val response = post(urlString) {
         header(HttpHeaders.Accept, ContentType.Application.Xml)
-        contentType(ContentType.Application.Xml)
-        body = methodCall.toDocument().writeToByteArray()
+        setBody(ByteArrayContent(methodCall.toDocument().writeToByteArray(), ContentType.Application.Xml))
     }
     val methodResponse = withContext(Dispatchers.IO) {
-        MethodResponse.parse { it.parse(response.content.toInputStream()) }
+        response.bodyAsChannel().toInputStream().use { body ->
+            MethodResponse.parse { it.parse(body) }
+        }
     }
     if (methodResponse is MethodResponseFault && throwOnFault) throw XmlRpcFault(methodResponse)
     return methodResponse

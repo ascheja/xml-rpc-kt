@@ -4,10 +4,11 @@
 
 package org.ascheja.xmlrpc.ktor.server
 
-import io.ktor.application.Application
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
-import io.ktor.routing.routing
+import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationCall
+import io.ktor.server.routing.routing
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
@@ -22,7 +23,7 @@ import kotlin.test.assertEquals
 
 class LibraryTest {
 
-    private lateinit var handler: suspend (MethodCall) -> MethodResponse
+    private lateinit var handler: suspend ApplicationCall.(MethodCall) -> MethodResponse
 
     private val moduleFn: Application.() -> Unit = {
         routing {
