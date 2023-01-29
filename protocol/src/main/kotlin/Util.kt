@@ -6,6 +6,7 @@ package org.ascheja.xmlrpc.protocol
 
 import org.w3c.dom.Document
 import java.io.ByteArrayOutputStream
+import java.io.OutputStream
 import javax.xml.parsers.DocumentBuilder
 import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.transform.OutputKeys
@@ -31,11 +32,15 @@ internal fun createDefaultTransformer(prettyPrint: Boolean): Transformer {
 
 public fun Document.writeToByteArray(prettyPrint: Boolean = true): ByteArray {
     return ByteArrayOutputStream().use { out ->
-        out.write(declarationBytes)
-        if (prettyPrint) out.write(System.lineSeparator().toByteArray())
-        createDefaultTransformer(prettyPrint).transform(DOMSource(this), StreamResult(out))
+        writeTo(out, prettyPrint)
         out.toByteArray()
     }
+}
+
+public fun Document.writeTo(out: OutputStream, prettyPrint: Boolean = true) {
+    out.write(declarationBytes)
+    if (prettyPrint) out.write(System.lineSeparator().toByteArray())
+    createDefaultTransformer(prettyPrint).transform(DOMSource(this), StreamResult(out))
 }
 
 public fun Document.writeToString(prettyPrint: Boolean = true): String {

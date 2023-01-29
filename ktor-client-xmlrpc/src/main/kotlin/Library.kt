@@ -11,21 +11,38 @@ import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsChannel
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import io.ktor.http.content.ByteArrayContent
+import io.ktor.http.content.OutgoingContent
+import io.ktor.utils.io.ByteWriteChannel
 import io.ktor.utils.io.jvm.javaio.toInputStream
+import io.ktor.utils.io.jvm.javaio.toOutputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.ascheja.xmlrpc.protocol.MethodCall
 import org.ascheja.xmlrpc.protocol.MethodResponse
 import org.ascheja.xmlrpc.protocol.MethodResponseFault
-import org.ascheja.xmlrpc.protocol.writeToByteArray
+import org.ascheja.xmlrpc.protocol.writeTo
 
 public class XmlRpcFault(public val methodResponse: MethodResponseFault) : RuntimeException()
 
-public suspend fun HttpClient.xmlRpc(urlString: String, methodCall: MethodCall, throwOnFault: Boolean = true): MethodResponse {
+public suspend fun HttpClient.xmlRpc(
+    urlString: String,
+    methodCall: MethodCall,
+    throwOnFault: Boolean = true
+): MethodResponse {
     val response = post(urlString) {
         header(HttpHeaders.Accept, ContentType.Application.Xml)
-        setBody(ByteArrayContent(methodCall.toDocument().writeToByteArray(), ContentType.Application.Xml))
+        setBody(
+            object : OutgoingContent.WriteChannelContent() {
+
+                override val contentType: ContentType = ContentType.Application.Xml
+
+                override suspend fun writeTo(channel: ByteWriteChannel) {
+                    withContext(Dispatchers.IO) {
+                        methodCall.toDocument().writeTo(channel.toOutputStream())
+                    }
+                }
+            }
+        )
     }
     val methodResponse = withContext(Dispatchers.IO) {
         response.bodyAsChannel().toInputStream().use { body ->

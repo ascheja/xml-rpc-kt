@@ -7,11 +7,13 @@ package org.ascheja.xmlrpc.ktor.client
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.engine.mock.toByteReadPacket
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.content.OutgoingContent
 import io.ktor.http.headersOf
+import io.ktor.utils.io.core.readBytes
 import kotlinx.coroutines.runBlocking
 import org.ascheja.xmlrpc.protocol.IntegerValue
 import org.ascheja.xmlrpc.protocol.MethodCall
@@ -77,10 +79,20 @@ class LibraryTest {
     private fun createMockEngine(expectedCall: MethodCall, response: MethodResponse): MockEngine {
         return MockEngine { request ->
             assertEquals(serviceUrl, request.url.toString())
-            val body = request.body as OutgoingContent.ByteArrayContent
-            assertEquals(ContentType.Application.Xml, body.contentType)
+            assertEquals(ContentType.Application.Xml, request.body.contentType)
             val methodCall = MethodCall.parse {
-                it.parse(ByteArrayInputStream(body.bytes()))
+                it.parse(
+                    ByteArrayInputStream(
+                        runBlocking {
+                            when (val body = request.body) {
+                                is OutgoingContent.ByteArrayContent -> body.bytes()
+                                is OutgoingContent.NoContent, is OutgoingContent.ProtocolUpgrade -> byteArrayOf()
+                                is OutgoingContent.ReadChannelContent -> body.toByteReadPacket().readBytes()
+                                is OutgoingContent.WriteChannelContent -> body.toByteReadPacket().readBytes()
+                            }
+                        }
+                    )
+                )
             }
             assertEquals(
                 expectedCall,
