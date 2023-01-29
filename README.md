@@ -1,5 +1,6 @@
 xml-rpc for Kotlin/Jvm
 ======================
+[![Maven Central](https://img.shields.io/maven-central/v/org.ascheja.xmlrpc/protocol)](https://mvnrepository.com/artifact/org.ascheja.xmlrpc)
 
 Kotlin binding for [xml-rpc](http://xmlrpc.com)
 
